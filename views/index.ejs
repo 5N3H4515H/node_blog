@@ -1,0 +1,37 @@
+<div class="container my-5" style="display: flex; justify-content: center; align-items: center;">
+    <div class="card" style="width: 500px">
+        <img src="https://picsum.photos/500/200" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h3 class="card-title">Login</h3>
+            <form id="login-form" action="/login" method="POST">
+                <% if (locals.messages.msg) { %>
+                    <div class="alert alert-success" role="alert">
+                        <%= locals.messages.msg %>
+                    </div>
+                    <% } %>
+                        <% if (locals.messages.error) { %>
+                            <div class="alert alert-success" role="alert">
+                                <%= locals.messages.error %>
+                            </div>
+                            <% } %>
+                                <div class="mb-3">
+                                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                                    <input type="email" placeholder="Enter your Email" name="email" class="form-control"
+                                        id="exampleInputEmail1" aria-describedby="emailHelp">
+                                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                                    <input placeholder="Password" type="password" name="pwd1" class="form-control"
+                                        id="password">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Log In</button>
+                                <a href="/signup" class="btn btn-primary">Sign Up</a>
+                                <button id="show_pwd" onclick="clickMe()" type="button" class="btn btn-primary">Show
+                                    Password</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/script2.js"></script>

@@ -1,0 +1,53 @@
+<%- include("partials/header") %>
+
+    <div class="container my-5" style="display: flex; justify-content: center;">
+        <div class="card" style="width: 800px;">
+            <img src="https://picsum.photos/500/100" class="card-img-top" alt="...">
+            <div class="card-body">
+                <!-- <form onsubmit="return submt()" id="signup-form" action="/signup" method="POST"> -->
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">First Name</label>
+                        <input value="<%= user.fname %>" disabled required placeholder="eg. Rajesh" type="text"
+                            name="fname" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Last Name</label>
+                        <input value="<%= user.lname %>" disabled required placeholder="eg. Mondal" type="text"
+                            name="lname" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Contact Number</label>
+                        <input value="<%= user.cno %>" disabled required type="text" placeholder="eg. 8945712378"
+                            name="cno" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email address</label>
+                        <input value="<%= user.mail %>" disabled required type="email"
+                            placeholder="eg. youremail@mail.com" name="email" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleAddress" class="form-label">Address</label>
+                    <input value="<%= user.adrs %>" disabled required type="text" placeholder="Your Address" name="adrs"
+                        class="form-control" id="exampleAddress">
+                </div>
+                <!-- <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input value="<%= user.fname %>" required type="password" placeholder="Password" name="pwd1" class="form-control"
+                            id="password">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="exampleInputPassword2" class="form-label">Confirm Password</label>
+                        <input value="<%= user.fname %>" required type="password" placeholder="Repeat password" name="pwd2" class="form-control"
+                            id="confirmPassword">
+                    </div>
+                </div> -->
+                <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+                <!-- </form> -->
+            </div>
+        </div>
+    </div>

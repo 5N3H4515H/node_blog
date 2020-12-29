@@ -1,0 +1,29 @@
+<%- include("partials/header") %>
+
+    <div class="container my-5">
+        <form action="/addblog" method="POST">
+            <% if (locals.messages.msg) { %>
+                <div class="alert alert-success" role="alert">
+                    <%= locals.messages.msg %>
+                </div>
+                <% } %>
+                    <%if (locals.messages.warning) { %>
+                        <div class="alert alert-success" role="alert">
+                            <%= locals.messages.warning %>
+                        </div>
+                        <% } %>
+                            <h3>Create Your Blog</h3>
+                            <div class="mb-3">
+                                <label class="form-label">Blog title</label>
+                                <input placeholder="Title of the blog" type="text" name="blog_title"
+                                    class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Blog body</label>
+                                <textarea placeholder="Your blog body" class="form-control" name="blog_body"
+                                    rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <!-----Notun tab open hye showblogs path er content show korbe----->
+        </form>
+    </div>
