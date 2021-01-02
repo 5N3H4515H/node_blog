@@ -10,24 +10,26 @@ const flash = require('express-flash')
 const user = require('./model/user')
 const schema = require('./model/schema')
 const passport = require('passport')
-const passportAuthenticator = require('./passportStrategy')
-const { query } = require('express')
+const passportAuthenticator = require('./strategy/passportStrategy')
 const PORT = process.env.PORT || 8080
+const { authorize, notAuthorize } = require('./functions/function')
+// routes
+const login = require('./routes/auth/login')
+const index = require('./routes/index/index')
+const signup = require('./routes/auth/signup')
+const profile = require('./routes/user/user')
+const create = require('./routes/blog/createBlog')
+const logout = require('./routes/auth/logout')
+const addblog = require('./routes/blog/addBlog')
+const allblog = require('./routes/blog/allBlog')
+const showblog = require('./routes/blog/showBlog')
+const editBlog = require('./routes/blog/editBlog')
+const update = require('./routes/blog/updateBlog')
 
 
 app.use(express.static('public'))
-function authorize(req, res, next) {
-    if (req.isAuthenticated())
-        return next()
-    return res.redirect('/login')
-}
 
-function notAuthorize(req, res, next) {
-    if (req.isAuthenticated())
-        return res.redirect('/profile')
-    return next()
-}
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }) //ei Url ta mone rakhte hbe
+mongoose.connect(process.env.MONGO_LOCAL, { useNewUrlParser: true, useUnifiedTopology: true }) //ei Url ta mone rakhte hbe
     .then(() => {
         console.log("Database Connected")
     }).catch((err) => {
@@ -45,117 +47,36 @@ app.use(
         keys: ["asdsadasdasd"]
     })
 )
+
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash());
 
 passportAuthenticator(passport, user)
 
-app.get('/', notAuthorize, (req, res) => {
-    res.render('index.ejs', { tabname: "Blogger Hub" })
-})
+// route initialization
+app.use('/', login)
 
-app.post('/signup', (req, res) => {
-    user({
-        fname: req.body.fname,
-        lname: req.body.lname,
-        adrs: req.body.adrs,
-        cno: req.body.cno,
-        mail: req.body.email,
-        password: req.body.pwd1
-    }).save((err, data) => {
-        if (data) {
-            req.flash('msg', "Sign Up Successful")
-            res.redirect('/')
-        }
-    })
-})
+app.use('/', index)
 
-app.get('/signup', notAuthorize, (req, res) => {
-    res.render('signup.ejs', { tabname: "Sign Up" })
-})
+app.use('/', signup)
 
-app.post('/login', notAuthorize, passport.authenticate('local', {
-    successRedirect: '/profile',
-    failureRedirect: "/",
-    failureFlash: true
-}))
-app.get('/profile', (req, res) => {
-    res.render('profile.ejs', { tabname: req.user.fname, user: req.user })
-})
-app.get('/create', authorize, (req, res) => {
-    res.render('create.ejs', { tabname: "Create Blog", user: req.user })
-})
+app.use('/', profile)
 
-app.get('/logout', (req, res) => {
-    req.logOut()
-    res.redirect('/')
-})
+app.use('/', create)
 
+app.use('/', logout)
 
-app.post('/addblog', notAuthorize, (req, res) => {
-    schema.findOne({ alias: req.body.blog_title.toLowerCase().replace(/\s+/g, '') }, (err, data) => {
-        if (data) {
-            req.flash('warning', "Title Already Exist")
-            res.redirect('/')
-        }
-        else {
-            schema({
-                name: req.body.blog_title,
-                alias: req.body.blog_title.toLowerCase().replace(/\s+/g, ''),
-                body: req.body.blog_body
-            }).save((err, data) => {
-                console.log("Dataset added")
-                req.flash('msg', "Dataset created")
-                res.redirect('/profile')
-            })
-        }
-    })
+app.use('/', addblog)
 
-})
+app.use('/', allblog)
 
-app.get('/showblogs', (req, res) => {
-    console.log(req.user)
-    schema.find({}, (err, data) => {
-        res.render('showblogs.ejs', { user: req.user, blogs: data, tabname: "Show Blogs" })
-    })
+app.use('/', showblog)
 
-})
+app.use('/', editBlog)
 
-app.get('/blog/:id', (req, res) => {
-    const id = req.params.id;
-    schema.findById(id, (err, data) => {
-        res.render('content.ejs', { blog: data, user: req.user, tabname: data.id })
-    })
-})
+app.use('/', update)
 
-app.get('/edit/:id', authorize, (req, res) => {
-    const id = req.params.id;
-    schema.findById(id, (err, data) => {
-        res.render('edit.ejs', { Data: data, tabname: data.id })
-    })
-})
-
-app.post('/update/:id', (req, res) => {
-    const id = req.params.id;
-    schema.findByIdAndUpdate(
-        id,
-        {
-            name: req.body.blog_title,
-            alias: req.body.blog_title.toLowerCase().replace(/\s+/g, ''),
-            body: req.body.blog_body
-        },
-        (err, data) => {
-            if (data) {
-                res.redirect(`/blog/${data.id}`)
-            }
-        }
-    )
-})
-
-app.get('/blog/:id', (req, res) => {
-    res.render('content.ejs')
-})
 
 app.use((req, res) => {
     res.status(404).render('404.ejs', { tabname: "404" })
